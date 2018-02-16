@@ -27,7 +27,7 @@
 #import "WRLDPickResult.h"
 #import "WRLDPickingApiHelpers.h"
 #import "WRLDMathApiHelpers.h"
-#import "WRLDEntityHighlightsApiHelpers.h"
+#import "WRLDStringApiHelpers.h"
 
 #include "EegeoApiHostPlatformConfigOptions.h"
 #include "iOSApiRunner.h"
@@ -938,22 +938,22 @@ const Eegeo::Positioning::ElevationMode::Type ToPositioningElevationMode(WRLDEle
     }
 }
 
-- (void)setEntityHighlights:(NSString*)indoorId highlightIds:(NSArray<NSString*>*)highlightIds color:(UIColor*) color
+- (void)setIndoorEntityHighlights:(NSString*)indoorMapId indoorEntityIds:(NSArray<NSString*>*)indoorEntityIds color:(UIColor*) color
 {
     Eegeo::Api::EegeoIndoorEntityApi& indoorEntityApi = [self getMapApi].GetIndoorEntityApi();
-    indoorEntityApi.SetHighlights(std::string([indoorId UTF8String]),
-                               [WRLDEntityHighlightsApiHelpers createNativeEntityHighlightIds:highlightIds],
+    indoorEntityApi.SetHighlights(std::string([indoorMapId UTF8String]),
+                               [WRLDStringApiHelpers copyToStringVector:indoorEntityIds],
                                [WRLDMathApiHelpers getEegeoColor:color]);
 }
 
-- (void)clearEntityHighlights:(NSString*)indoorId highlightIds:(NSArray<NSString*>*)highlightIds
+- (void)clearIndoorEntityHighlights:(NSString*)indoorMapId indoorEntityIds:(NSArray<NSString*>*)indoorEntityIds
 {
     Eegeo::Api::EegeoIndoorEntityApi& indoorEntityApi = [self getMapApi].GetIndoorEntityApi();
-    indoorEntityApi.ClearHighlights(std::string([indoorId UTF8String]),
-                                 [WRLDEntityHighlightsApiHelpers createNativeEntityHighlightIds:highlightIds]);
+    indoorEntityApi.ClearHighlights(std::string([indoorMapId UTF8String]),
+                                 [WRLDStringApiHelpers copyToStringVector:indoorEntityIds]);
 }
 
-- (void)clearAllEntityHighlights
+- (void)clearAllIndoorEntityHighlights
 {
     Eegeo::Api::EegeoIndoorEntityApi& indoorEntityApi = [self getMapApi].GetIndoorEntityApi();
     indoorEntityApi.ClearAllHighlights();
@@ -1214,11 +1214,12 @@ template<typename T> inline T* safe_cast(id instance)
     }
 }
 
-- (void)notifyIndoorEntitySelected:(const std::vector<std::string>&)indoorEntityIds
+//Needs to be updated so that it returns indoor map id as well. Preferably in an objective-c type containing both.
+- (void)notifyIndoorEntityTapped:(const std::vector<std::string>&)indoorEntityIds
 {
-    if ([self.delegate respondsToSelector:@selector(mapView:didPickIndoorEntities:)])
+    if ([self.delegate respondsToSelector:@selector(mapView:didTapIndoorEntities:)])
     {
-        [self.delegate mapView:self didPickIndoorEntities:[WRLDEntityHighlightsApiHelpers createEntityHighlightIds:indoorEntityIds]];
+        [self.delegate mapView:self didTapIndoorEntities:[WRLDStringApiHelpers copyToNSStringArray:indoorEntityIds]];
     }
 }
 

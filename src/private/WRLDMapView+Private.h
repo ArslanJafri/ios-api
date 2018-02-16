@@ -36,7 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)notifyBuildingInformationReceived:(int)buildingHighlightId;
 
-- (void)notifyIndoorEntitySelected:(const std::vector<std::string>&)indoorEntityIds;
+- (void)notifyIndoorEntityTapped:(const std::vector<std::string>&)indoorEntityIds;
 
 - (Eegeo::Api::EegeoMapApi&)getMapApi;
 

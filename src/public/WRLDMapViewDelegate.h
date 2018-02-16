@@ -108,10 +108,10 @@ routingQueryResponse: (WRLDRoutingQueryResponse*) routingQueryResponse;
 
 
 /*!
- A message sent when indoor entities are picked.
+ A message sent when indoor entities are tapped.
  @param mapView The WRLDMapView that is being observed.
- @param indoorEntityIds The ID(s) of indoor entities that were picked.
+ @param indoorEntityIds The ID(s) of indoor entities that were tapped.
  */
-- (void)mapView:(WRLDMapView *)mapView didPickIndoorEntities: (NSArray<NSString*>*) indoorEntityIds;
+- (void)mapView:(WRLDMapView *)mapView didTapIndoorEntities: (NSArray<NSString*>*) indoorEntityIds;
 
 @end
